@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">gimmeproject</string>
+    <string name="login">Login</string>
+    <string name="feedMenu">Feed</string>
+    <string name="profileMenu">Profile</string>
+    <string name="settingsMenu">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="facebook_app_id">317691122154800</string>
+    <string name="fb_login_protocol_scheme">fb317691122154800</string>
+</resources>
