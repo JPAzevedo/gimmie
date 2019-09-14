@@ -1,6 +1,7 @@
 package com.gimme.gimmeproject;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +17,7 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gimme.gimmeproject.webservices.AppLogin;
-import com.gimme.gimmeproject.webservices.LoginEntity;
+import com.gimme.gimmeproject.entities.LoginEntity;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -29,6 +30,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private static final String EMAIL = "email";
     private CallbackManager callbackManager;
+    private SharedPreferences preferences;
+    private LoginButton loginButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +40,11 @@ public class LoginActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
         setContentView(R.layout.activity_login);
+        LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
 
         callbackManager = CallbackManager.Factory.create();
-        LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
         loginButton.setReadPermissions(Arrays.asList(EMAIL));
-        // If you are using in a fragment, call loginButton.setFragment(this);
+            // If you are using in a fragment, call loginButton.setFragment(this);
 
 
         // Callback registration
@@ -60,8 +64,18 @@ public class LoginActivity extends AppCompatActivity {
                 // App code
             }
         });
+
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        preferences = getSharedPreferences("user_login",MODE_PRIVATE);
+        if(preferences.getBoolean("login",false)){
+            Intent mIntent = new Intent(this,MainActivity.class);
+            startActivity(mIntent);
+        }
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -86,6 +100,9 @@ public class LoginActivity extends AppCompatActivity {
     public void manageResult(String data) {
             Log.d("Token","Data: "+data);
             if(data != null){
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putBoolean("login",true);
+                editor.commit();
                 Intent mIntent = new Intent(this,MainActivity.class);
                 startActivity(mIntent);
             }
@@ -100,7 +117,7 @@ public class LoginActivity extends AppCompatActivity {
             try {
                 ObjectMapper mapper = new ObjectMapper();
                 String loginData = mapper.writeValueAsString(new LoginEntity(arg[0].getToken(),arg[0].getUserId(),arg[0].getApplicationId()));
-                return AppLogin.getInstance().post("http://192.168.1.65:9000/session",loginData);
+                return AppLogin.getInstance().post(Configuration.APP_LOCAL_URL + "/facebook",loginData);
             } catch (IOException e) {
                 e.printStackTrace();
             }
