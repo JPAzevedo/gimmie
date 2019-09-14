@@ -1,4 +1,4 @@
-package com.gimme.gimmeproject.webservices;
+package com.gimme.gimmeproject.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

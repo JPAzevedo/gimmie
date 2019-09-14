@@ -9,8 +9,9 @@ import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.view.MenuItem;
 
-import com.gimme.gimmeproject.fragment.FeedFragment;
-import com.gimme.gimmeproject.fragment.TestFragment;
+import com.gimme.gimmeproject.fragments.FeedFragment;
+import com.gimme.gimmeproject.fragments.TestFragment;
+import com.gimme.gimmeproject.fragments.UserFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,8 +26,8 @@ public class MainActivity extends AppCompatActivity {
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
         toolbar.setTitle("Shop");
+        loadFragment(new FeedFragment());
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -47,8 +48,8 @@ public class MainActivity extends AppCompatActivity {
                     loadFragment(fragment);
                     return true;
                 case R.id.accountSettings:
-                    toolbar.setTitle("Cart");
-                    fragment = new TestFragment();
+                    toolbar.setTitle("Profile");
+                    fragment = new UserFragment();
                     loadFragment(fragment);
                     return true;
             }
